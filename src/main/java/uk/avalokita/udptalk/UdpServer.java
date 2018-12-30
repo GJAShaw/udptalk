@@ -31,10 +31,16 @@ public class UdpServer implements Runnable {
 	 */
 	public void run() {
         try {
-	        this.datagramSocket = new DatagramSocket(port);
+	        datagramSocket = new DatagramSocket(port, Inet4Address.getLocalHost());
+	        bufferIn = new byte[datagramSocket.getReceiveBufferSize()];
+	        // bufferOut = new byte[datagramSocket.getSendBufferSize()];
+	        
 	        while (true) {
-   		     	System.out.println("beep");
-       		 	TimeUnit.MINUTES.sleep(1);
+	        	datagramPacket = new DatagramPacket(bufferIn, bufferIn.length);
+	        	System.out.println("Invoking receive()...");
+	        	datagramSocket.receive(datagramPacket);
+   		     	System.out.println("Returned from receive()");
+       		 	TimeUnit.SECONDS.sleep(10);
         	}
 	    } catch(Exception x) {
 	    	System.out.println(x.getMessage());
@@ -80,5 +86,20 @@ public class UdpServer implements Runnable {
 	 * instance DatagramSocket
 	 */
 	private DatagramSocket datagramSocket;
+	
+	/**
+	 * instance DatagramPacket
+	 */
+	private DatagramPacket datagramPacket;
+	
+	/**
+	 * instance buffer for receive
+	 */
+	private byte[] bufferIn;
+	
+	/**
+	 * instance buffer for send
+	 */
+	private byte[] bufferOut;
 	
 }
