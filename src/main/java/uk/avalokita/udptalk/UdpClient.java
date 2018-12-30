@@ -16,17 +16,17 @@ public class UdpClient implements Runnable {
 	 * @param String
 	 * @param port
 	 */
-	public UdpClient(String raddrString, int port) throws UnknownHostException {
+	public UdpClient(String raddrString, int rport) throws UnknownHostException {
 		this.raddr = (Inet4Address)InetAddress.getByName(raddrString);
-		this.port = port;
+		this.rport = rport;
 	}
 
 	/**
 	 * @param port
 	 */
-	public UdpClient(int port) throws UnknownHostException {
+	public UdpClient(int rport) throws UnknownHostException {
 		this.raddr = (Inet4Address)InetAddress.getLocalHost();
-		this.port = port;
+		this.rport = rport;
 	}
 
 	/* (non-Javadoc)
@@ -35,19 +35,28 @@ public class UdpClient implements Runnable {
 	public void run() {
         try {
 	        datagramSocket = new DatagramSocket();
-	        datagramSocket.connect(raddr, port);
-	        // bufferIn = new byte[datagramSocket.getReceiveBufferSize()];
+	        datagramSocket.connect(raddr, rport);
+	        bufferIn = new byte[datagramSocket.getReceiveBufferSize()];
+	        datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
 	        bufferOut = new byte[datagramSocket.getSendBufferSize()];
-	        
-	        // WIP
-	        bufferOut = "Hello!".getBytes(/*StandardCharsets.UTF_8*/);
-	        
+
 	        while (true) {
-	        	datagramPacket = new DatagramPacket(bufferOut, bufferOut.length);
+	        	// send message
+	        	bufferOut = "Hello!".getBytes(/*StandardCharsets.UTF_8*/);
+		        datagramPacketOut = new DatagramPacket(bufferOut, bufferOut.length);
 	        	System.out.println("Invoking send()...");
-	        	datagramSocket.send(datagramPacket);
-   		     	System.out.println("Returned from send()");
-       		 	TimeUnit.SECONDS.sleep(10);
+	        	datagramSocket.send(datagramPacketOut);
+       		 	
+   		     	// await response
+	        	datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
+	        	System.out.println("Awaiting incoming packet...");
+	        	datagramSocket.receive(datagramPacketIn); // blocking
+	        	
+	        	// do things with the response
+	        	
+	        	// Wait 10 seconds before chelping again
+	        	TimeUnit.SECONDS.sleep(10);
+	        	
         	}
 	    } catch(Exception x) {
 	    	System.out.println(x.getMessage());
@@ -81,8 +90,7 @@ public class UdpClient implements Runnable {
 	/**
 	 * instance server port
 	 */
-	private final int port;
-
+	private final int rport;
 	
 	/**
 	 * instance server address
@@ -95,14 +103,19 @@ public class UdpClient implements Runnable {
 	private DatagramSocket datagramSocket;
 	
 	/**
-	 * instance DatagramPacket
+	 * instance DatagramPacket for receive
 	 */
-	private DatagramPacket datagramPacket;
+	private DatagramPacket datagramPacketIn;
 	
 	/**
 	 * instance buffer for receive
 	 */
 	private byte[] bufferIn;
+	
+	/**
+	 * instance DatagramPacket for send
+	 */
+	private DatagramPacket datagramPacketOut;
 	
 	/**
 	 * instance buffer for send

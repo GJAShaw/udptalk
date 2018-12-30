@@ -4,7 +4,7 @@
 package uk.avalokita.udptalk;
 
 import java.net.*;
-import java.util.concurrent.TimeUnit;
+// import java.util.concurrent.TimeUnit;
 
 /**
  * @author greg
@@ -15,8 +15,8 @@ public class UdpServer implements Runnable {
 	/**
 	 * @param port
 	 */
-	public UdpServer(int port) {
-		this.port = port;
+	public UdpServer(int lport) {
+		this.lport = lport;
 	}
 
 	/**
@@ -31,16 +31,31 @@ public class UdpServer implements Runnable {
 	 */
 	public void run() {
         try {
-	        datagramSocket = new DatagramSocket(port, Inet4Address.getLocalHost());
+	        datagramSocket = new DatagramSocket(lport, Inet4Address.getLocalHost());
+	        // no connect() - this is a server
 	        bufferIn = new byte[datagramSocket.getReceiveBufferSize()];
-	        // bufferOut = new byte[datagramSocket.getSendBufferSize()];
-	        
+	        bufferOut = new byte[datagramSocket.getSendBufferSize()];
+        	
 	        while (true) {
-	        	datagramPacket = new DatagramPacket(bufferIn, bufferIn.length);
-	        	System.out.println("Invoking receive()...");
-	        	datagramSocket.receive(datagramPacket);
-   		     	System.out.println("Returned from receive()");
-       		 	TimeUnit.SECONDS.sleep(10);
+	        	// wait for an incoming message    	
+	        	datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
+	        	System.out.println("Awaiting incoming packet...");
+	        	datagramSocket.receive(datagramPacketIn); // blocking
+	        	
+	        	// get the remote address and port
+	        	setRaddr((Inet4Address)datagramPacketIn.getAddress());
+	        	setRport(datagramPacketIn.getPort());
+	        	
+	        	// do other things with the message data... (would go here)
+	        	
+	        	// reply
+		        bufferOut = "Go away.".getBytes(/*StandardCharsets.UTF_8*/);
+	        	datagramPacketOut = new DatagramPacket(
+	        			bufferOut, bufferOut.length, getRaddr(), getRport()
+	        	);
+	        	System.out.println("Replying...");
+	        	datagramSocket.send(datagramPacketOut);
+	        	
         	}
 	    } catch(Exception x) {
 	    	System.out.println(x.getMessage());
@@ -66,21 +81,59 @@ public class UdpServer implements Runnable {
 	}
 	
 	/**
-	 * instance port number
+	 * class default lport number
 	 */
-	private final int port;
+	public static final int DEFAULT_PORT = 9876;
 
 	/**
-	 * @return the port
+	 * instance local port
+	 */
+	private final int lport;
+
+	/**
+	 * @return the local port
 	 */
 	public int getPort() {
-		return port;
+		return lport;
 	}
 	
 	/**
-	 * class default port number
+	 * instance remote port
 	 */
-	public static final int DEFAULT_PORT = 9876;
+	private int rport;
+	
+	/**
+	 * @return the rport
+	 */
+	public int getRport() {
+		return rport;
+	}
+
+	/**
+	 * @param rport the rport to set
+	 */
+	private void setRport(int rport) {
+		this.rport = rport;
+	}
+
+	/**
+	 * instance remote address
+	 */
+	private Inet4Address raddr;
+	
+	/**
+	 * @return the raddr
+	 */
+	public Inet4Address getRaddr() {
+		return raddr;
+	}
+
+	/**
+	 * @param raddr the raddr to set
+	 */
+	private void setRaddr(Inet4Address raddr) {
+		this.raddr = raddr;
+	}
 
 	/**
 	 * instance DatagramSocket
@@ -88,14 +141,19 @@ public class UdpServer implements Runnable {
 	private DatagramSocket datagramSocket;
 	
 	/**
-	 * instance DatagramPacket
+	 * instance DatagramPacket for receive
 	 */
-	private DatagramPacket datagramPacket;
+	private DatagramPacket datagramPacketIn;
 	
 	/**
 	 * instance buffer for receive
 	 */
 	private byte[] bufferIn;
+	
+	/**
+	 * instance DatagramPacket for send
+	 */
+	private DatagramPacket datagramPacketOut;
 	
 	/**
 	 * instance buffer for send

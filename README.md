@@ -7,4 +7,4 @@ UDP communicators.
 A UDP server - work in progress
 
 ## UdpClient
-A UDP client - not yet begun
+A UDP client - work in progress
