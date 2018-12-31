@@ -39,7 +39,7 @@ public class UdpServer implements Runnable {
 	        while (true) {
 	        	// wait for an incoming message    	
 	        	datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
-	        	System.out.println("Awaiting incoming packet...");
+	        	// System.out.println("Awaiting incoming packet...");
 	        	datagramSocket.receive(datagramPacketIn); // blocking
 	        	
 	        	// get the remote address and port
@@ -48,12 +48,14 @@ public class UdpServer implements Runnable {
 	        	
 	        	// do other things with the message data... (would go here)
 	        	
+	        	
 	        	// reply
-		        bufferOut = "Go away.".getBytes(/*StandardCharsets.UTF_8*/);
+	        	textOut = "Go away.";
+		        bufferOut = textOut.getBytes("UTF-8");
 	        	datagramPacketOut = new DatagramPacket(
 	        			bufferOut, bufferOut.length, getRaddr(), getRport()
 	        	);
-	        	System.out.println("Replying...");
+	        	// System.out.println("Replying...");
 	        	datagramSocket.send(datagramPacketOut);
 	        	
         	}
@@ -151,6 +153,11 @@ public class UdpServer implements Runnable {
 	private byte[] bufferIn;
 	
 	/**
+	 * instance String for receive
+	 */
+	private String textIn;
+	
+	/**
 	 * instance DatagramPacket for send
 	 */
 	private DatagramPacket datagramPacketOut;
@@ -159,5 +166,10 @@ public class UdpServer implements Runnable {
 	 * instance buffer for send
 	 */
 	private byte[] bufferOut;
+	
+	/**
+	 * instance String for send
+	 */
+	private String textOut;
 	
 }

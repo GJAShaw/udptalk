@@ -36,15 +36,16 @@ public class UdpClient implements Runnable {
         try {
 	        datagramSocket = new DatagramSocket();
 	        datagramSocket.connect(raddr, rport);
+	        
 	        bufferIn = new byte[datagramSocket.getReceiveBufferSize()];
-	        datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
 	        bufferOut = new byte[datagramSocket.getSendBufferSize()];
 
 	        while (true) {
 	        	// send message
-	        	bufferOut = "Hello!".getBytes(/*StandardCharsets.UTF_8*/);
+	        	textOut = "Hello server!";
+	        	bufferOut = textOut.getBytes("UTF-8");
 		        datagramPacketOut = new DatagramPacket(bufferOut, bufferOut.length);
-	        	System.out.println("Invoking send()...");
+	        	System.out.println("Sending message: " + textOut);
 	        	datagramSocket.send(datagramPacketOut);
        		 	
    		     	// await response
@@ -53,6 +54,13 @@ public class UdpClient implements Runnable {
 	        	datagramSocket.receive(datagramPacketIn); // blocking
 	        	
 	        	// do things with the response
+	        	textIn = new String(
+	        			bufferIn,
+	        			0 /*offset*/,
+	        			datagramPacketIn.getLength(),
+	        			"UTF-8"
+	        	);
+	        	System.out.println("Server responded: " + textIn);
 	        	
 	        	// Wait 10 seconds before chelping again
 	        	TimeUnit.SECONDS.sleep(10);
@@ -113,6 +121,11 @@ public class UdpClient implements Runnable {
 	private byte[] bufferIn;
 	
 	/**
+	 * instance String for receive
+	 */
+	private String textIn;
+	
+	/**
 	 * instance DatagramPacket for send
 	 */
 	private DatagramPacket datagramPacketOut;
@@ -121,5 +134,10 @@ public class UdpClient implements Runnable {
 	 * instance buffer for send
 	 */
 	private byte[] bufferOut;
+	
+	/**
+	 * instance String for send
+	 */
+	private String textOut;
 	
 }
