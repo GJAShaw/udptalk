@@ -25,7 +25,7 @@ public class UdpTalk {
 			System.exit(0);
 		}
 
-		// Open local socket, connect to remote
+		// Open local socket, 'connect' to remote (no actual connection in UDP)
 		DatagramSocket local = null;
 		try {
 			local = new DatagramSocket();
@@ -68,11 +68,11 @@ public class UdpTalk {
 		String sendString;
 		String receiveString;
 		
-		// Create a Scanner, to read from stdin (terminal or file)
+		// Create a Scanner, to read from stdin (console or file)
 		Scanner scanner = new Scanner(System.in);
 		
 		// See if stdin is from console or elsewhere - controls later echoing
-		Console c = System.console();
+		Console console = System.console();
 		
 		// Eternal loop, till user enters 'exit'
 		System.out.println(""); // empty line, to mark the beginning of output
@@ -82,7 +82,7 @@ public class UdpTalk {
 			try {
 				sendString = scanner.nextLine();
 				if (! sendString.equalsIgnoreCase("exit")) {
-					if (c == null) { // stdin is not the console
+					if (console == null) { // stdin is not the console
 						System.out.println(sendString);
 					}
 					// send sendString will go here...
@@ -109,11 +109,10 @@ public class UdpTalk {
 		
 		}
 
-	// release resources before shutting down
+	// release resources
 	scanner.close();
 	local.close();
 
 	}
 	
-
 }
