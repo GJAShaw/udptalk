@@ -23,15 +23,19 @@ public class UdpTalk {
 		if (args.length != 2) {
 			System.out.println("****TODO help text goes here");
 			System.exit(0);
-		}
+		} // ****TODO  Use a Socket object 'remote' to check args. Later, pass 'remote' to Bufferiser
 
 		// Open local socket, 'connect' to remote (no actual connection in UDP)
 		DatagramSocket local = null;
+		InetSocketAddress remote = null;
 		try {
+			remote = new InetSocketAddress(
+					args[0], Integer.parseInt(args[1])
+			);
 			local = new DatagramSocket();
 			local.connect(
-					(Inet4Address)InetAddress.getByName(args[0]),
-					Integer.parseInt(args[1])
+					(Inet4Address)InetAddress.getByName(remote.getHostString()),
+					remote.getPort()
 			);
 		} catch (SocketException e) {
 			System.out.println("Failed to create local socket");
@@ -68,14 +72,14 @@ public class UdpTalk {
 		String sendString;
 		String receiveString;
 		
-		// Create a Scanner, to read from stdin (console or file)
+		// Create a Scanner to read from stdin
 		Scanner scanner = new Scanner(System.in);
 		
 		// See if stdin is from console or elsewhere - controls later echoing
 		Console console = System.console();
 		
-		// Eternal loop, till user enters 'exit'
-		System.out.println(""); // empty line, to mark the beginning of output
+		// Dialogue with console, or other stdin
+		System.out.println(""); // delimit the beginning of output
 		boolean gotExit = false;
 		while (! gotExit) {
 			
@@ -85,22 +89,13 @@ public class UdpTalk {
 					if (console == null) { // stdin is not the console
 						System.out.println(sendString);
 					}
-					// send sendString will go here...
-					/*
-					 * ... wait for reply...
-					 */
-					// populate receiveString with reply. For now
-					if (! sendString.isEmpty()) {
-						receiveString = "Yeah, whatever";
-					} else {
-						receiveString = "Eh?";
-					}
+					receiveString = new Bufferiser(remote, sendString).response();
 					System.out.println(receiveString + "\n");
 				} else {
 					gotExit = true;
 				}
 			} catch (NoSuchElementException e) {
-				// stdin ended without an 'endl' - that's OK
+				// stdin ended without a newline character - that's OK
 				gotExit = true;
 			} catch (Exception e) {
 				e.printStackTrace();
