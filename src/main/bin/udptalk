@@ -1,0 +1,48 @@
+#! /bin/sh
+# ------------------------------------------------------------------------------
+# file: udptalk
+# type: shell script
+# project: udptalk
+# 
+# purpose: set up environment, run Java application
+# ------------------------------------------------------------------------------
+
+# Work in progress
+
+export JARFILE=whatevs.jar
+
+java -cp ${JARFILE} "$@"
+
+# ------------------------------------------------------------------------------
+# ****TODO remove this section once I've sorted out the Maven to copy this to
+# the targets directory and chmod 755 it.
+#
+# http://maven.40175.n5.nabble.com/Where-to-put-shell-scripts-in-the-Standard-Directory-Layout-td106364.html
+#
+# "... assembly script is below. It creates an assembly with two subdirectories: bin and jars."
+# <assembly>
+#  <id>jarset</id>
+#  <formats>
+#    <format>zip</format>
+#  </formats>
+#  <includeBaseDirectory>true</includeBaseDirectory>
+#  <fileSets>
+#    <fileSet>
+#      <directory>src/main/bin</directory>
+#      <outputDirectory>/bin</outputDirectory>
+#      <fileMode>755</fileMode>
+#    </fileSet>
+#  </fileSets>
+#  <dependencySets>
+#    <dependencySet>
+#      <outputDirectory>/jars</outputDirectory>
+#      <scope>runtime</scope>
+#    </dependencySet>
+#  </dependencySets>
+#</assembly>
+#
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# EOF
+# ------------------------------------------------------------------------------
