@@ -23,7 +23,7 @@ public class UdpTalk {
 		if (args.length != 2) {
 			System.out.println("****TODO help text goes here");
 			System.exit(0);
-		} // ****TODO  Use a Socket object 'remote' to check args. Later, pass 'remote' to Bufferiser
+		}
 
 		// Open local socket, 'connect' to remote (no actual connection in UDP)
 		DatagramSocket local = null;

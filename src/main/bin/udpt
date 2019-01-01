@@ -16,7 +16,7 @@ export PACKAGE='uk.avalokita.udptalk'
 # export JARFILE=whatevs.jar
 
 # java -cp ${JARFILE} "$@"
-java -Dbuflen="${BUFFER_LENGTH}" -Ddgramsize="${DATAGRAM_SIZE}" \
+java -Dbuffer.length="${BUFFER_LENGTH}" -Ddatagram.size="${DATAGRAM_SIZE}" \
   -cp "${CLASSPATH}" "${PACKAGE}.${APPLICATION}" "$@"
 
 
