@@ -33,13 +33,21 @@ class Bufferiser {
 	 * @throws UnsupportedEncodingException 
 	 */
 	String response() throws UnsupportedEncodingException {
-		
+
+		// create buffer for outgoing data
 		outBuf = inString.getBytes("UTF-8");
 		// call a Packetiser
 		// outString = new Packetiser(remote, outBuf).response();
 
-		
-		createInBuf();
+		// loop goes here - while outbuf contains unsent data:
+		/*
+		 * get next chunk of unsent data, enough to fill a datagram
+		 * put it in a datagram
+		 * try to send it (another internal loop will go here)
+		 * if response arrives, put it in a byte[]
+		 * append contents of byte[] to outString
+		 * return
+		 */
 		
 
 		
@@ -54,6 +62,7 @@ class Bufferiser {
 	}
 
 	
+	// createInBuf is redundant. 
 	/**
 	 * @throws IllegalArgumentException
 	 * @throws NumberFormatException
