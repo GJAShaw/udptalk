@@ -9,17 +9,15 @@
 # Work in progress
 
 export APPLICATION=UdpTalk
-export BUFFER_LENGTH=2048 # bytes
-export DATAGRAM_SIZE=2048 # bytes
 export CLASSPATH='./udptalk/target/classes'
-export LOCAL_TIMEOUT=2000 # cs = how long I am prepared to wait
+export DATAGRAM_SIZE=512 # bytes ****TODO find maximum
 export PACKAGE='uk.avalokita.udptalk'
 export REMOTE_RETRIES=-1 # -1 -> indefinite, 0 -> none, +n -> n Rtimeouts
 export REMOTE_TIMEOUT=100 # cs = interval between retries 
 # export JARFILE=whatevs.jar
 
 # java -cp ${JARFILE} "$@"
-java -Dbuffer.length="${BUFFER_LENGTH}" -Ddatagram.size="${DATAGRAM_SIZE}" \
+java -Ddatagram.size="${DATAGRAM_SIZE}" \
   -cp "${CLASSPATH}" "${PACKAGE}.${APPLICATION}" "$@"
 
 
