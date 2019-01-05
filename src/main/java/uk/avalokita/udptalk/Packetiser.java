@@ -81,7 +81,7 @@ class Packetiser {
 				"UTF-8"
 			);
 			
-		} while (countBytesRemaining >= 0);
+		} while (countBytesRemaining > 0);
 
 		
 		// ****TODO while developing, here is a stub...
