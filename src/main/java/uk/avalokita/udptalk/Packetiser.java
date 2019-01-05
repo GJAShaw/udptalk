@@ -10,13 +10,13 @@ import java.net.InetSocketAddress;
  * @author greg
  *
  */
-class Bufferiser {
+class Packetiser {
 	
 	/**
 	 * @param remote
 	 * @param inString
 	 */
-	public Bufferiser(InetSocketAddress remote, String inString) {
+	public Packetiser(InetSocketAddress remote, String inString) {
 		this.remote = remote;
 		this.inString = inString;
 	}

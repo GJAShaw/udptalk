@@ -89,7 +89,7 @@ public class UdpTalk {
 					if (console == null) { // stdin is not the console
 						System.out.println(sendString);
 					}
-					receiveString = new Bufferiser(remote, sendString).response();
+					receiveString = new Packetiser(remote, sendString).response();
 					System.out.println(receiveString + "\n");
 				} else {
 					gotExit = true;
