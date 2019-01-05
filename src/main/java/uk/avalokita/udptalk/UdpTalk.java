@@ -69,8 +69,8 @@ public class UdpTalk {
 		}
 		
 		// Strings to hold I/O
-		String sendString;
-		String receiveString;
+		String requestString;
+		String responseString;
 		
 		// Create a Scanner to read from stdin
 		Scanner scanner = new Scanner(System.in);
@@ -84,13 +84,13 @@ public class UdpTalk {
 		while (! gotExit) {
 			
 			try {
-				sendString = scanner.nextLine();
-				if (! sendString.equalsIgnoreCase("exit")) {
+				requestString = scanner.nextLine();
+				if (! requestString.equalsIgnoreCase("exit")) {
 					if (console == null) { // stdin is not the console
-						System.out.println(sendString);
+						System.out.println(requestString);
 					}
-					receiveString = new Packetiser(remote, sendString).response();
-					System.out.println(receiveString + "\n");
+					responseString = new Packetiser(remote, requestString).response();
+					System.out.println(responseString + "\n");
 				} else {
 					gotExit = true;
 				}

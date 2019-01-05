@@ -14,11 +14,11 @@ class Packetiser {
 	
 	/**
 	 * @param remote
-	 * @param inString
+	 * @param requestString
 	 */
-	public Packetiser(InetSocketAddress remote, String inString) {
+	public Packetiser(InetSocketAddress remote, String requestString) {
 		this.remote = remote;
-		this.inString = inString;
+		this.requestString = requestString;
 	}
 	
 	/**
@@ -28,7 +28,7 @@ class Packetiser {
 	String response() throws UnsupportedEncodingException {
 
 		// create buffer for outgoing data
-		outBuf = inString.getBytes("UTF-8");
+		requestBuffer = requestString.getBytes("UTF-8");
 
 		// loop goes here - while outbuf contains unsent data:
 		/*
@@ -36,14 +36,14 @@ class Packetiser {
 		 * put it in a datagram
 		 * try to send it (another internal loop will go here)
 		 * if response arrives, put it in a byte[]
-		 * append contents of byte[] to outString
+		 * append contents of byte[] to responseString
 		 * return
 		 */
 		
 		// **** TODO
 		// Eventually, this will just return OutString;
 		// For now, while developing, here is a stub...
-		if (! inString.isEmpty()) {
+		if (! requestString.isEmpty()) {
 			return "Yeah, whatever";
 		} else {
 			return "Eh?";
@@ -59,28 +59,28 @@ class Packetiser {
 	/**
 	 * 
 	 */
-	private String inString;
+	private String requestString;
 	
 	/**
 	 * 
 	 */
-	private byte[] outBuf;
+	private byte[] requestBuffer;
 	
 	/**
 	 * 
 	 */
-	private byte[] inBuf;
+	private byte[] responseBuffer;
 	
 	/**
 	 * 
 	 */
-	private String outString;
+	private String responseString;
 
 	/**
-	 * @return the outString
+	 * @return the responseString
 	 */
 	String getOutString() {
-		return outString;
+		return responseString;
 	}
 
 }
