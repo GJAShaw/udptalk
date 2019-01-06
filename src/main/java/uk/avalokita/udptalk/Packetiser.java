@@ -38,7 +38,6 @@ class Packetiser {
 		DatagramPacket requestDatagramPacket = null;
 		byte[] responseBuffer = new byte[0]; // not null - mut
 		byte[] responseBytes = null;
-		DatagramPacket responseDatagramPacket = null;
 		String responseString = null;
 		byte[] tempBytes = null;
 		
@@ -63,10 +62,9 @@ class Packetiser {
 			countBytesRemaining -= countBytesToPacketise;
 			
 			// Hand requestDatagramPacket over to a PacketSender, wait for response...
-			responseDatagramPacket = new PacketSender(local, remote, requestDatagramPacket).response();
+			responseBytes = new PacketSender(local, remote, requestDatagramPacket).response();
 			
 			// Update responseBuffer
-			responseBytes = responseDatagramPacket.getData();
 			tempBytes = new byte[responseBuffer.length + responseBytes.length];
 			System.arraycopy(responseBuffer, 0, tempBytes, 0, responseBuffer.length);
 			System.arraycopy(responseBytes, 0, tempBytes, responseBuffer.length, responseBytes.length);

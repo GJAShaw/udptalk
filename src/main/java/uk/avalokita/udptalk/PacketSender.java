@@ -3,6 +3,7 @@
  */
 package uk.avalokita.udptalk;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -20,41 +21,59 @@ class PacketSender {
 	 * @param remote
 	 * @param requestDatagramPacket
 	 */
-	public PacketSender(DatagramSocket local, InetSocketAddress remote, DatagramPacket requestDatagramPacket) {
+	public PacketSender(
+			DatagramSocket local,
+			InetSocketAddress remote,
+			DatagramPacket requestDatagramPacket
+		){
 		this.local = local;
 		this.remote = remote;
 		this.requestDatagramPacket = requestDatagramPacket;
 	}
 
-	protected DatagramPacket response() {
+	protected byte[] response() {
 		
-		DatagramPacket responseDatagramPacket = null;
-		int retriesLeft = 3; // need some cleverness to sanitise System property, deal w non-positive values
+		byte[] responseBytes = new byte[0];
 		int waitTime = 2; // need some cleverness to sanitise System property
-		while (true) {
+		
+		try {
+			// Send the request
+			local.send(requestDatagramPacket);
 			
-			//local.send(requestDatagramPacket);
-			
-			// Thread to deal with timer? Some other library class, maybe
-			
-			// get response
-			// datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
-        	
-			// local.receive(responseDatagramPacket); // blocking
-        	
-			// ****TODO get rid of this stub
-			try {
-				String junkString = "The cake is a lie";
-				byte[] junkBuffer = junkString.getBytes("UTF-8");
-				responseDatagramPacket = new DatagramPacket(junkBuffer, junkBuffer.length);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			// Wait for reply/replies
+			boolean timedOut = false;
+			while (!timedOut) {
+
+				
+				// get response
+				// datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
+				
+				// local.receive(responseDatagramPacket); // blocking
+				
+				
+
+					
+				
+				// ****TODO - remove backstop
+				timedOut = true;
 			}
-			
-			return responseDatagramPacket;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
+		// ****TODO get rid of this stub
+		try {
+			String junkString = "The cake is a lie";
+			byte[] junkBuffer = junkString.getBytes("UTF-8");
+			responseBytes = junkBuffer;
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+					
+		return responseBytes;
+
 	}
 	
 	

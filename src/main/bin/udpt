@@ -12,12 +12,12 @@ export APPLICATION=UdpTalk
 export CLASSPATH='./udptalk/target/classes'
 export DATAGRAM_SIZE=512 # bytes ****TODO find maximum
 export PACKAGE='uk.avalokita.udptalk'
-export REMOTE_RETRIES=-1 # -1 -> indefinite, 0 -> none, +n -> n Rtimeouts
-export REMOTE_TIMEOUT=100 # cs = interval between retries 
+# export REMOTE_RETRIES=-1 # -1 -> indefinite, 0 -> none, +n -> n Rtimeouts
+export TIMEOUT_MILLISECONDS=1000
 # export JARFILE=whatevs.jar
 
 # java -cp ${JARFILE} "$@"
-java -Ddatagram.size="${DATAGRAM_SIZE}" \
+java -Dtimeout.milleseconds="${TIMEOUT_MILLISECONDS}" \
   -cp "${CLASSPATH}" "${PACKAGE}.${APPLICATION}" "$@"
 
 
