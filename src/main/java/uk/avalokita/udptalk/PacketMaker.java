@@ -12,13 +12,13 @@ import java.net.InetSocketAddress;
  * @author greg
  *
  */
-class Packetiser {
+class PacketMaker {
 	
 	/**
 	 * @param remote
 	 * @param requestString
 	 */
-	public Packetiser(DatagramSocket local, InetSocketAddress remote, String requestString) {
+	public PacketMaker(DatagramSocket local, InetSocketAddress remote, String requestString) {
 		this.local = local;
 		this.remote = remote;
 		this.requestString = requestString;
