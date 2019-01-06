@@ -3,11 +3,9 @@
  */
 package uk.avalokita.udptalk;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 
 /**
  * @author greg
@@ -15,81 +13,46 @@ import java.net.InetSocketAddress;
  */
 class PacketSender {
 
-	
-	/**
-	 * @param local
-	 * @param remote
-	 * @param requestDatagramPacket
-	 */
-	public PacketSender(
-			DatagramSocket local,
-			InetSocketAddress remote,
-			DatagramPacket requestDatagramPacket
-		){
-		this.local = local;
-		this.remote = remote;
-		this.requestDatagramPacket = requestDatagramPacket;
-	}
-
-	protected byte[] response() {
+	protected static byte[] response(DatagramSocket local, DatagramPacket requestDatagramPacket) {
 		
-		byte[] responseBytes = new byte[0];
-		int waitTime = 2; // need some cleverness to sanitise System property
+		byte[] responseBuffer = new byte[0]; // accumulated response, from all received packets
 		
 		try {
+			
+			byte[] responseBytes = new byte[local.getReceiveBufferSize()];
+			DatagramPacket responseDatagramPacket = new DatagramPacket(responseBytes, responseBytes.length);
+			byte[] tempBytes = null;
+			int timeout = 100; // milliseconds ****TODO get System property
+			
 			// Send the request
 			local.send(requestDatagramPacket);
 			
 			// Wait for reply/replies
-			boolean timedOut = false;
-			while (!timedOut) {
+			local.setSoTimeout(timeout);
+			while (true /* allow timeout exception to break from loop */) {
 
+				local.receive(responseDatagramPacket); // blocking, for timeout or till get data
 				
-				// get response
-				// datagramPacketIn = new DatagramPacket(bufferIn, bufferIn.length);
-				
-				// local.receive(responseDatagramPacket); // blocking
-				
-				
+				responseBytes = responseDatagramPacket.getData();
+				tempBytes = new byte[responseBuffer.length + responseBytes.length];
+				System.arraycopy(responseBuffer, 0, tempBytes, 0, responseBuffer.length);
+				System.arraycopy(responseBytes, 0, tempBytes, responseBuffer.length, responseBytes.length);
+				responseBuffer = tempBytes;
 
-					
-				
-				// ****TODO - remove backstop
-				timedOut = true;
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
+		} catch (SocketTimeoutException e) {
+			if (responseBuffer.length == 0) {
+				System.out.println(e.getMessage());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block - needs much more granularity
+			// If timeout, check for any received data - if got some, then assume OK
 			e.printStackTrace();
 		}
-		
-		// ****TODO get rid of this stub
-		try {
-			String junkString = "The cake is a lie";
-			byte[] junkBuffer = junkString.getBytes("UTF-8");
-			responseBytes = junkBuffer;
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-					
-		return responseBytes;
+				
+		return responseBuffer;
 
 	}
-	
-	
-	/**
-	 * 
-	 */
-	private DatagramSocket local;
-	
-	/**
-	 * 
-	 */
-	private InetSocketAddress remote;
-
-	/**
-	 * 
-	 */
-	private DatagramPacket requestDatagramPacket;
 
 }

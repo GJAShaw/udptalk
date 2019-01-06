@@ -61,8 +61,8 @@ class PacketMaker {
 			offset += countBytesToPacketise;
 			countBytesRemaining -= countBytesToPacketise;
 			
-			// Hand requestDatagramPacket over to a PacketSender, wait for response...
-			responseBytes = new PacketSender(local, remote, requestDatagramPacket).response();
+			// Hand requestDatagramPacket over to PacketSender, wait for response...
+			responseBytes = PacketSender.response(local, requestDatagramPacket);
 			
 			// Update responseBuffer
 			tempBytes = new byte[responseBuffer.length + responseBytes.length];
