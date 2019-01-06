@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.util.Arrays;
 
 /**
  * @author greg
@@ -37,12 +36,11 @@ class Packetiser {
 		int countBytesToPacketise = 0;
 		int offset = 0;
 		DatagramPacket requestDatagramPacket = null;
-		byte[] responseBuffer = new byte[0]; // not null - must be acceptable to Arrays.copyOf()
+		byte[] responseBuffer = new byte[0]; // not null - mut
 		byte[] responseBytes = null;
 		DatagramPacket responseDatagramPacket = null;
 		String responseString = null;
 		byte[] tempBytes = null;
-		// ****TODO would an ArrayList work better here? They are resizable.
 		
 		// ****TODO fix this hardcoding blag later
 		// Have some cleverness to get/reset System Property
@@ -67,31 +65,18 @@ class Packetiser {
 			// Hand requestDatagramPacket over to a PacketSender, wait for response...
 			responseDatagramPacket = new PacketSender(local, remote, requestDatagramPacket).response();
 			
-			// Update the responseString
+			// Update responseBuffer
 			responseBytes = responseDatagramPacket.getData();
-			tempBytes = Arrays.copyOf(
-				responseBuffer,
-				responseBuffer.length + responseBytes.length
-			);
-			responseBuffer = Arrays.copyOf(tempBytes, tempBytes.length);
-			responseString += new String(
-				responseBuffer,
-				0 /*offset*/,
-				responseBuffer.length,
-				"UTF-8"
-			);
+			tempBytes = new byte[responseBuffer.length + responseBytes.length];
+			System.arraycopy(responseBuffer, 0, tempBytes, 0, responseBuffer.length);
+			System.arraycopy(responseBytes, 0, tempBytes, responseBuffer.length, responseBytes.length);
+			responseBuffer = tempBytes;
 			
 		} while (countBytesRemaining > 0);
 
-		
-		// ****TODO while developing, here is a stub...
-		if (! requestString.isEmpty()) {
-			responseString = "Yeah, whatever";
-		} else {
-			responseString = "Eh?";
-		}
-		
+		responseString = new String(responseBuffer, 0 /*offset*/, responseBuffer.length, "UTF-8");	
 		return responseString;
+
 	}
 
 

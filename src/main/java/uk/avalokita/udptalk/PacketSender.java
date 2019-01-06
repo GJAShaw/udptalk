@@ -44,7 +44,7 @@ class PacketSender {
         	
 			// ****TODO get rid of this stub
 			try {
-				String junkString = "junk";
+				String junkString = "The cake is a lie";
 				byte[] junkBuffer = junkString.getBytes("UTF-8");
 				responseDatagramPacket = new DatagramPacket(junkBuffer, junkBuffer.length);
 			} catch (Exception e) {
