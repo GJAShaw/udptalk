@@ -14,7 +14,7 @@ public class Crap {
 	 */
 	public static void main(String[] args) {
 		
-		byte[] crap = new byte[-9];
+		// byte[] crap = new byte[-9];
 
 	}
 

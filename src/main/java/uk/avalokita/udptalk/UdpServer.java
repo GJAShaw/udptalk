@@ -155,7 +155,7 @@ public class UdpServer implements Runnable {
 	/**
 	 * instance String for receive
 	 */
-	private String textIn;
+//	private String textIn;
 	
 	/**
 	 * instance DatagramPacket for send
